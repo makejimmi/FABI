@@ -52,11 +52,14 @@
           "min_clearance": 0.508
         }
       },
-      "diff_pair_dimensions": [],
-      "drc_exclusions": [
-        "footprint_type_mismatch|91740000|116090000|00000000-0000-0000-0000-0000602453f8|00000000-0000-0000-0000-000000000000",
-        "items_not_allowed|132740000|136640000|00000000-0000-0000-0000-0000602efea2|00000000-0000-0000-0000-000000000000"
+      "diff_pair_dimensions": [
+        {
+          "gap": 0.0,
+          "via_gap": 0.0,
+          "width": 0.0
+        }
       ],
+      "drc_exclusions": [],
       "meta": {
         "filename": "board_design_settings.json",
         "version": 2
@@ -184,6 +187,7 @@
         0.0,
         0.25,
         0.5,
+        0.5,
         1.0
       ],
       "tuning_pattern_settings": {
@@ -212,7 +216,12 @@
           "spacing": 0.6
         }
       },
-      "via_dimensions": [],
+      "via_dimensions": [
+        {
+          "diameter": 0.0,
+          "drill": 0.0
+        }
+      ],
       "zones_allow_external_fillets": false,
       "zones_use_no_outline": true
     },
@@ -802,6 +811,10 @@
     [
       "8404dabe-a0ce-44ce-a3c9-f9e9e54d2b02",
       "Stammblatt"
+    ],
+    [
+      "793a4126-d8fb-49c3-b4dd-9f7725c17758",
+      "LPW1"
     ]
   ],
   "text_variables": {}
