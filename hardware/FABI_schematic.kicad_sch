@@ -6394,10 +6394,6 @@
 		(uuid "230b79ba-a365-4045-917f-328b9b91505e")
 	)
 	(no_connect
-		(at 33.02 50.8)
-		(uuid "3517988b-4c70-4b66-82ed-3a878734a9e6")
-	)
-	(no_connect
 		(at 78.74 66.04)
 		(uuid "36fa535e-a0f5-4186-af05-a86c06079e93")
 	)
@@ -6444,10 +6440,6 @@
 	(no_connect
 		(at 33.02 99.06)
 		(uuid "d9696586-df01-49e0-beeb-61100abc5259")
-	)
-	(no_connect
-		(at 33.02 48.26)
-		(uuid "d9db1eb5-d316-44ae-b630-14580ad3a024")
 	)
 	(no_connect
 		(at 30.48 139.7)
@@ -7805,6 +7797,16 @@
 	)
 	(wire
 		(pts
+			(xy 25.4 50.8) (xy 33.02 50.8)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "da6a0175-6395-4deb-b0f5-4372c8c2e84b")
+	)
+	(wire
+		(pts
 			(xy 182.88 139.7) (xy 187.96 139.7)
 		)
 		(stroke
@@ -7912,6 +7914,16 @@
 			(type default)
 		)
 		(uuid "e98ab0cd-1c41-4dd1-9caa-3ceb2081a130")
+	)
+	(wire
+		(pts
+			(xy 243.84 43.18) (xy 243.84 45.72)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "ea6ea45a-a34c-49c8-91d5-ea9131e950d6")
 	)
 	(polyline
 		(pts
@@ -8312,6 +8324,17 @@
 			(justify left bottom)
 		)
 		(uuid "0955458d-3d82-4206-a146-b05f177f1371")
+	)
+	(label "V_BATT_PIN"
+		(at 33.02 48.26 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 1.27 1.27)
+			)
+			(justify right bottom)
+		)
+		(uuid "0c667caf-9c99-4252-85a9-b067b9febe50")
 	)
 	(label "NEOPIXEL"
 		(at 99.06 144.78 180)
@@ -8818,6 +8841,28 @@
 			(justify right bottom)
 		)
 		(uuid "fcf6807f-dd28-4f04-9218-fbffaf9a3270")
+	)
+	(global_label "CHARGE_STAT"
+		(shape input)
+		(at 25.4 50.8 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 0.9906 0.9906)
+			)
+			(justify right)
+		)
+		(uuid "51aa5e50-43fe-4660-9dc0-250545411157")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 13.7704 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
+				(hide yes)
+			)
+		)
 	)
 	(symbol
 		(lib_id "power:GND")
@@ -9980,8 +10025,8 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GNDA"
-			(at 147.955 177.8 90)
+		(property "Value" "GND"
+			(at 148.59 177.7999 90)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -11055,7 +11100,7 @@
 				(justify left)
 			)
 		)
-		(property "Footprint" "Package_SO:MSOP-8_3x3mm_P0.65mm"
+		(property "Footprint" "Package_SO:SOIC-8_3.9x4.9mm_P1.27mm"
 			(at 256.54 38.1 0)
 			(effects
 				(font
@@ -11160,7 +11205,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GNDA"
+		(property "Value" "GND"
 			(at 162.56 153.805 0)
 			(effects
 				(font
@@ -11603,7 +11648,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GNDA"
+		(property "Value" "GND"
 			(at 242.705 111.76 0)
 			(effects
 				(font
@@ -11664,7 +11709,7 @@
 		(exclude_from_sim no)
 		(in_bom yes)
 		(on_board yes)
-		(dnp yes)
+		(dnp no)
 		(uuid "4826e25f-45b0-4dd7-b304-8d639fc69c76")
 		(property "Reference" "BZ1"
 			(at 111.76 180.975 0)
@@ -12578,7 +12623,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 243.84 50.8 0)
+		(at 243.84 53.34 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -12586,7 +12631,7 @@
 		(dnp no)
 		(uuid "656e3c8e-562b-4b4c-9d5a-6ec1a8f3b57b")
 		(property "Reference" "#PWR08"
-			(at 243.84 57.15 0)
+			(at 243.84 59.69 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12595,7 +12640,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 243.967 55.1942 0)
+			(at 243.967 57.7342 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12603,7 +12648,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 243.84 50.8 0)
+			(at 243.84 53.34 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12612,7 +12657,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 243.84 50.8 0)
+			(at 243.84 53.34 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12621,7 +12666,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 243.84 50.8 0)
+			(at 243.84 53.34 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -12770,7 +12815,7 @@
 				(hide yes)
 			)
 		)
-		(property "Value" "GNDA"
+		(property "Value" "GND"
 			(at 261.62 120.785 0)
 			(effects
 				(font
@@ -13168,111 +13213,6 @@
 			(project "FABI_schematic"
 				(path "/8404dabe-a0ce-44ce-a3c9-f9e9e54d2b02"
 					(reference "#PWR022")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "Device:R")
-		(at 243.84 46.99 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(uuid "7f2580c1-ba5b-4712-9f42-de8e5cf7591c")
-		(property "Reference" "R6"
-			(at 241.046 48.26 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "10k"
-			(at 243.84 48.768 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
-			(at 242.062 46.99 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 243.84 46.99 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 243.84 46.99 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Farnell" "2616584"
-			(at 243.84 46.99 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Digikey" "541-2204-1-ND"
-			(at 243.84 46.99 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "RS Components" "188-5836 "
-			(at 243.84 46.99 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Mouser" "71-RCA060310K0FKEA"
-			(at 243.84 46.99 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "48889d91-633f-47e7-88be-466bf8f6f2a3")
-		)
-		(pin "2"
-			(uuid "33f89284-cb30-44fb-8db4-93c0e2f1cc6b")
-		)
-		(instances
-			(project "FABI_schematic"
-				(path "/8404dabe-a0ce-44ce-a3c9-f9e9e54d2b02"
-					(reference "R6")
 					(unit 1)
 				)
 			)
@@ -17052,6 +16992,111 @@
 		)
 	)
 	(symbol
+		(lib_id "Device:R")
+		(at 243.84 49.53 180)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(uuid "e5c5d9b1-dbdb-44ba-a131-e9920d271ce5")
+		(property "Reference" "R6"
+			(at 247.65 46.99 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "4k7"
+			(at 248.92 50.8 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "Resistor_SMD:R_0603_1608Metric"
+			(at 245.618 49.53 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 243.84 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" ""
+			(at 243.84 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Farnell" "3994558"
+			(at 243.84 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Digikey" "1292-WR06X472JTLCT-ND"
+			(at 243.84 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "RS Components" "199-5594"
+			(at 243.84 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser" "756-WCR0603-4K7FI"
+			(at 243.84 49.53 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "b9612034-37ab-4c39-8d7d-7b90017e221d")
+		)
+		(pin "2"
+			(uuid "5d3e5569-661d-4f25-baa8-21b311f5c3e1")
+		)
+		(instances
+			(project "FABI_schematic"
+				(path "/8404dabe-a0ce-44ce-a3c9-f9e9e54d2b02"
+					(reference "R6")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "FABI_customLib:AudioJack3_Ground")
 		(at 25.4 157.48 0)
 		(unit 1)
@@ -18039,6 +18084,33 @@
 			(effects
 				(font
 					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Farnell" "3127271 "
+			(at 91.44 38.1 0)
+			(effects
+				(font
+					(size 0.9906 0.9906)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser" "621-D5V0F4U6SO-7"
+			(at 91.44 38.1 0)
+			(effects
+				(font
+					(size 0.9906 0.9906)
+				)
+				(hide yes)
+			)
+		)
+		(property "RS comp" ""
+			(at 91.44 38.1 0)
+			(effects
+				(font
+					(size 0.9906 0.9906)
 				)
 				(hide yes)
 			)
