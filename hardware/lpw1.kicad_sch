@@ -2451,6 +2451,16 @@
 	)
 	(wire
 		(pts
+			(xy 68.58 35.56) (xy 68.58 36.83)
+		)
+		(stroke
+			(width 0)
+			(type default)
+		)
+		(uuid "d07a55f3-6446-4718-9fb8-34b2f32b6d9d")
+	)
+	(wire
+		(pts
 			(xy 68.58 44.45) (xy 68.58 48.26)
 		)
 		(stroke
@@ -2716,7 +2726,7 @@
 		(uuid 881fd385-df7d-4194-9697-93e78137cfcc)
 	)
 	(rectangle
-		(start 15.24 102.87)
+		(start 22.86 102.87)
 		(end 158.75 172.085)
 		(stroke
 			(width 0)
@@ -4943,7 +4953,7 @@
 	)
 	(symbol
 		(lib_id "esp32-thing-eagle-import:V_BATT")
-		(at 68.58 36.83 0)
+		(at 68.58 35.56 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -4951,7 +4961,7 @@
 		(dnp no)
 		(uuid "f9758130-c9c4-471a-aeef-94d113e6549e")
 		(property "Reference" "#SUPPLY02"
-			(at 68.58 36.83 0)
+			(at 68.58 35.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4960,7 +4970,7 @@
 			)
 		)
 		(property "Value" "V_BATT"
-			(at 67.564 33.274 0)
+			(at 67.564 32.004 0)
 			(effects
 				(font
 					(size 1.778 1.5113)
@@ -4969,7 +4979,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 68.58 36.83 0)
+			(at 68.58 35.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4978,7 +4988,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 68.58 36.83 0)
+			(at 68.58 35.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -4987,7 +4997,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 68.58 36.83 0)
+			(at 68.58 35.56 0)
 			(effects
 				(font
 					(size 1.27 1.27)
