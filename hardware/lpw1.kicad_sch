@@ -2066,6 +2066,12 @@
 		(uuid "66fd3dca-0583-45ef-a964-9da430c60418")
 	)
 	(junction
+		(at 68.58 48.26)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "75289fd5-d369-4a59-a60b-60cbc8c44a0f")
+	)
+	(junction
 		(at 177.8 45.72)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -2082,12 +2088,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "8dff7ebe-d552-40c0-a3cc-ad9444c55791")
-	)
-	(junction
-		(at 68.58 48.26)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "94e43a5b-3dc2-4baa-967f-2464c163cfb5")
 	)
 	(junction
 		(at 104.14 66.04)
@@ -2903,17 +2903,6 @@
 		)
 		(uuid "ea5a9489-c19d-494a-a959-bebc58324408")
 	)
-	(label "V_BATT_PIN"
-		(at 195.58 152.4 180)
-		(fields_autoplaced yes)
-		(effects
-			(font
-				(size 1.27 1.27)
-			)
-			(justify right bottom)
-		)
-		(uuid "bfb506d1-cab2-4541-b9ec-817940b387ca")
-	)
 	(global_label "V_BATT_MEASURE"
 		(shape output)
 		(at 205.74 134.62 0)
@@ -2937,7 +2926,7 @@
 		)
 	)
 	(global_label "CHARGE_STAT"
-		(shape output)
+		(shape bidirectional)
 		(at 111.76 142.24 0)
 		(fields_autoplaced yes)
 		(effects
@@ -2948,7 +2937,7 @@
 		)
 		(uuid "3dd9f4fa-6d4f-422d-978f-59cfb933f42b")
 		(property "Intersheetrefs" "${INTERSHEET_REFS}"
-			(at 123.3896 142.24 0)
+			(at 124.1326 142.24 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -2959,7 +2948,7 @@
 		)
 	)
 	(global_label "V_IN"
-		(shape input)
+		(shape output)
 		(at 147.32 43.18 180)
 		(fields_autoplaced yes)
 		(effects
@@ -3047,7 +3036,7 @@
 		)
 	)
 	(global_label "V_PWR_SWITCH"
-		(shape input)
+		(shape output)
 		(at 73.66 66.04 0)
 		(fields_autoplaced yes)
 		(effects
@@ -3064,6 +3053,28 @@
 					(size 1.27 1.27)
 				)
 				(justify left)
+				(hide yes)
+			)
+		)
+	)
+	(global_label "V_BATT_VD_SWITCH"
+		(shape bidirectional)
+		(at 195.58 152.4 180)
+		(fields_autoplaced yes)
+		(effects
+			(font
+				(size 0.9906 0.9906)
+			)
+			(justify right)
+		)
+		(uuid "f16a916c-ea85-445b-bc66-c762f18c9d1e")
+		(property "Intersheetrefs" "${INTERSHEET_REFS}"
+			(at 179.3867 152.4 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify right)
 				(hide yes)
 			)
 		)
@@ -3888,6 +3899,131 @@
 			(project "FABI_schematic"
 				(path "/8404dabe-a0ce-44ce-a3c9-f9e9e54d2b02/793a4126-d8fb-49c3-b4dd-9f7725c17758"
 					(reference "#PWR049")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
+		(lib_id "DMG2305UXQ-7:DMG2305UXQ-7")
+		(at 60.96 58.42 0)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "72b39ae0-3d84-497e-9ac5-1ca97569b29f")
+		(property "Reference" "Q2"
+			(at 72.39 54.6099 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Value" "DMG2305UXQ-7"
+			(at 72.39 57.1499 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" "p-MOS:SOT96P240X110-3N"
+			(at 72.39 157.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "https://www.diodes.com//assets/Datasheets/DMG2305UXQ.pdf"
+			(at 72.39 257.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+				(hide yes)
+			)
+		)
+		(property "Description" "MOSFET MOSFET BVDSS"
+			(at 60.96 58.42 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Height" "1.1"
+			(at 72.39 457.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+				(hide yes)
+			)
+		)
+		(property "Mouser Part Number" "621-DMG2305UXQ-7"
+			(at 72.39 557.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+				(hide yes)
+			)
+		)
+		(property "Mouser Price/Stock" "https://www.mouser.co.uk/ProductDetail/Diodes-Incorporated/DMG2305UXQ-7?qs=60RJRzIpcl%2FUiAojHt1c9w%3D%3D"
+			(at 72.39 657.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Name" "Diodes Incorporated"
+			(at 72.39 757.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+				(hide yes)
+			)
+		)
+		(property "Manufacturer_Part_Number" "DMG2305UXQ-7"
+			(at 72.39 857.15 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left top)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "e9e61480-d992-48f8-be65-5b27d077167a")
+		)
+		(pin "3"
+			(uuid "a53a68fe-4cc2-44c1-821e-e918142f57f7")
+		)
+		(pin "2"
+			(uuid "14964c2a-376f-4812-bb5e-1a04a3556daa")
+		)
+		(instances
+			(project "FABI_schematic"
+				(path "/8404dabe-a0ce-44ce-a3c9-f9e9e54d2b02/793a4126-d8fb-49c3-b4dd-9f7725c17758"
+					(reference "Q2")
 					(unit 1)
 				)
 			)
@@ -4800,131 +4936,6 @@
 			(project "FABI_schematic"
 				(path "/8404dabe-a0ce-44ce-a3c9-f9e9e54d2b02/793a4126-d8fb-49c3-b4dd-9f7725c17758"
 					(reference "C13")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "DMG2305UXQ-7:DMG2305UXQ-7")
-		(at 60.96 58.42 0)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "f479f6b8-273f-45bf-a284-e530f069f0c0")
-		(property "Reference" "Q3"
-			(at 72.39 54.6099 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Value" "DMG2305UXQ-7"
-			(at 72.39 57.1499 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left)
-			)
-		)
-		(property "Footprint" "p-MOS:SOT96P240X110-3N"
-			(at 72.39 157.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "https://www.diodes.com//assets/Datasheets/DMG2305UXQ.pdf"
-			(at 72.39 257.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-				(hide yes)
-			)
-		)
-		(property "Description" "MOSFET MOSFET BVDSS"
-			(at 60.96 58.42 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Height" "1.1"
-			(at 72.39 457.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-				(hide yes)
-			)
-		)
-		(property "Mouser Part Number" "621-DMG2305UXQ-7"
-			(at 72.39 557.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-				(hide yes)
-			)
-		)
-		(property "Mouser Price/Stock" "https://www.mouser.co.uk/ProductDetail/Diodes-Incorporated/DMG2305UXQ-7?qs=60RJRzIpcl%2FUiAojHt1c9w%3D%3D"
-			(at 72.39 657.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer_Name" "Diodes Incorporated"
-			(at 72.39 757.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-				(hide yes)
-			)
-		)
-		(property "Manufacturer_Part_Number" "DMG2305UXQ-7"
-			(at 72.39 857.15 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify left top)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "a0bc917f-9639-40b3-b7cc-ed4cd1caa97a")
-		)
-		(pin "3"
-			(uuid "e1ab9303-73cb-4390-8c05-63b3fe20c53a")
-		)
-		(pin "2"
-			(uuid "c2fa31cb-9dce-422c-96ca-0470fc251cab")
-		)
-		(instances
-			(project ""
-				(path "/8404dabe-a0ce-44ce-a3c9-f9e9e54d2b02/793a4126-d8fb-49c3-b4dd-9f7725c17758"
-					(reference "Q3")
 					(unit 1)
 				)
 			)
