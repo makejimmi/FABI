@@ -59,7 +59,10 @@
           "width": 0.0
         }
       ],
-      "drc_exclusions": [],
+      "drc_exclusions": [
+        "footprint_type_mismatch|91740000|116090000|00000000-0000-0000-0000-0000602453f8|00000000-0000-0000-0000-000000000000",
+        "items_not_allowed|132740000|136640000|00000000-0000-0000-0000-0000602efea2|00000000-0000-0000-0000-000000000000"
+      ],
       "meta": {
         "filename": "board_design_settings.json",
         "version": 2
@@ -763,7 +766,7 @@
           "group_by": false,
           "label": "Digikey",
           "name": "Digikey",
-          "show": false
+          "show": true
         },
         {
           "group_by": false,
@@ -793,13 +796,13 @@
           "group_by": false,
           "label": "Mouser",
           "name": "Mouser",
-          "show": false
+          "show": true
         },
         {
           "group_by": false,
           "label": "Mouser Part Number",
           "name": "Mouser Part Number",
-          "show": false
+          "show": true
         },
         {
           "group_by": false,
@@ -811,13 +814,13 @@
           "group_by": false,
           "label": "RS",
           "name": "RS",
-          "show": false
+          "show": true
         },
         {
           "group_by": false,
           "label": "RS Components",
           "name": "RS Components",
-          "show": false
+          "show": true
         },
         {
           "group_by": false,
@@ -829,7 +832,7 @@
           "group_by": false,
           "label": "Reichelt",
           "name": "Reichelt",
-          "show": false
+          "show": true
         },
         {
           "group_by": false,
@@ -841,6 +844,12 @@
           "group_by": false,
           "label": "Beschreibung",
           "name": "Description",
+          "show": false
+        },
+        {
+          "group_by": false,
+          "label": "RS comp",
+          "name": "RS comp",
           "show": false
         }
       ],

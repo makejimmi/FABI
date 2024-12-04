@@ -1899,127 +1899,6 @@
 				)
 			)
 		)
-		(symbol "Device:NetTie_2"
-			(pin_numbers hide)
-			(pin_names
-				(offset 0) hide)
-			(exclude_from_sim no)
-			(in_bom no)
-			(on_board yes)
-			(property "Reference" "NT"
-				(at 0 1.27 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Value" "NetTie_2"
-				(at 0 -1.27 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-				)
-			)
-			(property "Footprint" ""
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Datasheet" "~"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "Description" "Net tie, 2 pins"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_keywords" "net tie short"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(property "ki_fp_filters" "Net*Tie*"
-				(at 0 0 0)
-				(effects
-					(font
-						(size 1.27 1.27)
-					)
-					(hide yes)
-				)
-			)
-			(symbol "NetTie_2_0_1"
-				(polyline
-					(pts
-						(xy -1.27 0) (xy 1.27 0)
-					)
-					(stroke
-						(width 0.254)
-						(type default)
-					)
-					(fill
-						(type none)
-					)
-				)
-			)
-			(symbol "NetTie_2_1_1"
-				(pin passive line
-					(at -2.54 0 0)
-					(length 2.54)
-					(name "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "1"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-				(pin passive line
-					(at 2.54 0 180)
-					(length 2.54)
-					(name "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-					(number "2"
-						(effects
-							(font
-								(size 1.27 1.27)
-							)
-						)
-					)
-				)
-			)
-		)
 		(symbol "Device:R"
 			(pin_numbers hide)
 			(pin_names
@@ -5885,7 +5764,7 @@
 				(pin power_out line
 					(at 0 0 90)
 					(length 0)
-					(name "pwr"
+					(name "~"
 						(effects
 							(font
 								(size 1.27 1.27)
@@ -6176,12 +6055,6 @@
 		(uuid "1ba03140-7648-448b-b0f8-d20ae72c1b0b")
 	)
 	(junction
-		(at 180.34 144.78)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "1f509177-3c70-4387-a80e-f01eb2afe6d3")
-	)
-	(junction
 		(at 190.5 144.78)
 		(diameter 0)
 		(color 0 0 0 0)
@@ -6198,6 +6071,12 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "308081ce-8a5a-4739-b79b-d2304a768e1d")
+	)
+	(junction
+		(at 55.88 30.48)
+		(diameter 0)
+		(color 0 0 0 0)
+		(uuid "3379ebd9-2060-401b-bc48-67d7439c932a")
 	)
 	(junction
 		(at 76.2 170.18)
@@ -6234,12 +6113,6 @@
 		(diameter 0)
 		(color 0 0 0 0)
 		(uuid "546d0cbe-30dd-4aa3-9060-cd2260dfdbe2")
-	)
-	(junction
-		(at 81.28 91.44)
-		(diameter 0)
-		(color 0 0 0 0)
-		(uuid "57556eba-b102-4c54-96dc-1329da958063")
 	)
 	(junction
 		(at 215.9 134.62)
@@ -6971,16 +6844,6 @@
 		)
 		(uuid "665daa29-86d1-4ea1-8d9f-367c1a79b7d6")
 	)
-	(wire
-		(pts
-			(xy 170.18 144.78) (xy 180.34 144.78)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "6a6f00d5-5987-4bd6-9766-9915a83f2be6")
-	)
 	(polyline
 		(pts
 			(xy 124.46 167.64) (xy 165.1 167.64)
@@ -7030,16 +6893,6 @@
 			(type default)
 		)
 		(uuid "71d32b09-248b-4393-b745-9401b4af2113")
-	)
-	(wire
-		(pts
-			(xy 81.28 91.44) (xy 83.82 91.44)
-		)
-		(stroke
-			(width 0)
-			(type default)
-		)
-		(uuid "7258e4ca-e15f-4130-a129-6f4ca85183ff")
 	)
 	(polyline
 		(pts
@@ -7303,7 +7156,7 @@
 	)
 	(wire
 		(pts
-			(xy 78.74 91.44) (xy 81.28 91.44)
+			(xy 78.74 91.44) (xy 83.82 91.44)
 		)
 		(stroke
 			(width 0)
@@ -8023,7 +7876,7 @@
 	)
 	(wire
 		(pts
-			(xy 180.34 144.78) (xy 190.5 144.78)
+			(xy 170.18 144.78) (xy 190.5 144.78)
 		)
 		(stroke
 			(width 0)
@@ -9484,6 +9337,15 @@
 				(hide yes)
 			)
 		)
+		(property "Mouser" "649-91601-304LF"
+			(at 167.64 93.98 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "0ed0e899-1b87-40b1-ad3f-401daa533b5b")
 		)
@@ -9686,6 +9548,15 @@
 			)
 		)
 		(property "Mouser" "782-TSOP4838"
+			(at 236.22 78.74 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser Part Number" "782-TSOP4838"
 			(at 236.22 78.74 0)
 			(effects
 				(font
@@ -10991,118 +10862,6 @@
 		)
 	)
 	(symbol
-		(lib_id "Device:NetTie_2")
-		(at 200.66 149.86 90)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom no)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "29a6d8ec-4469-41ea-a703-fa282f5f7cbd")
-		(property "Reference" "NT1"
-			(at 201.422 148.836 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Value" "NetTie_2"
-			(at 201.422 150.884 90)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(justify right)
-			)
-		)
-		(property "Footprint" "NetTie:NetTie-2_SMD_Pad0.5mm"
-			(at 200.66 149.86 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 200.66 149.86 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 200.66 149.86 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Digikey" "DNP"
-			(at 200.66 149.86 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Farnell" "DNP"
-			(at 200.66 149.86 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Mouser" "DNP"
-			(at 200.66 149.86 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "RS Components" "DNP"
-			(at 200.66 149.86 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "2df70a09-8037-46a1-8084-b95b2e08b764")
-		)
-		(pin "2"
-			(uuid "60bd071c-4199-4590-aada-b54d0ddbf4f3")
-		)
-		(instances
-			(project "FM3_mainboard"
-				(path "/37f31dec-63fc-4634-a141-5dc5d2b60fe4"
-					(reference "NT1")
-					(unit 1)
-				)
-			)
-			(project "FABI_schematic"
-				(path "/8404dabe-a0ce-44ce-a3c9-f9e9e54d2b02"
-					(reference "NT2")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "Amplifier_Audio:PAM8302AAS")
 		(at 251.46 38.1 0)
 		(unit 1)
@@ -11179,6 +10938,15 @@
 			(effects
 				(font
 					(size 0.9906 0.9906)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser Part Number" "621-PAM8302AASCR"
+			(at 251.46 38.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
 				)
 				(hide yes)
 			)
@@ -12651,6 +12419,73 @@
 		)
 	)
 	(symbol
+		(lib_id "power:PWR_FLAG")
+		(at 55.88 30.48 90)
+		(unit 1)
+		(exclude_from_sim no)
+		(in_bom yes)
+		(on_board yes)
+		(dnp no)
+		(fields_autoplaced yes)
+		(uuid "63b74430-c48e-427c-99a7-e3f7e603a652")
+		(property "Reference" "#FLG01"
+			(at 53.975 30.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Value" "PWR_FLAG"
+			(at 52.07 30.4799 90)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(justify left)
+			)
+		)
+		(property "Footprint" ""
+			(at 55.88 30.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Datasheet" "~"
+			(at 55.88 30.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Description" "Special symbol for telling ERC where power comes from"
+			(at 55.88 30.48 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(pin "1"
+			(uuid "b7408a90-927e-4062-b918-6b900105da9a")
+		)
+		(instances
+			(project ""
+				(path "/8404dabe-a0ce-44ce-a3c9-f9e9e54d2b02"
+					(reference "#FLG01")
+					(unit 1)
+				)
+			)
+		)
+	)
+	(symbol
 		(lib_id "power:GND")
 		(at 238.76 53.34 0)
 		(unit 1)
@@ -13111,72 +12946,6 @@
 			(project "FABI_schematic"
 				(path "/8404dabe-a0ce-44ce-a3c9-f9e9e54d2b02"
 					(reference "Q1")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
-		(lib_id "power:PWR_FLAG")
-		(at 81.28 91.44 180)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "7d9b2d8d-c34b-4617-95e4-9267d1cdd1fd")
-		(property "Reference" "#FLG01"
-			(at 81.28 93.345 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "PWR_FLAG"
-			(at 81.28 95.385 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 81.28 91.44 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 81.28 91.44 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 81.28 91.44 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "e43f773e-8dc2-4f6d-8092-869fab992346")
-		)
-		(instances
-			(project "FABI_schematic"
-				(path "/8404dabe-a0ce-44ce-a3c9-f9e9e54d2b02"
-					(reference "#FLG01")
 					(unit 1)
 				)
 			)
@@ -13815,72 +13584,6 @@
 		)
 	)
 	(symbol
-		(lib_id "power:PWR_FLAG")
-		(at 180.34 144.78 180)
-		(unit 1)
-		(exclude_from_sim no)
-		(in_bom yes)
-		(on_board yes)
-		(dnp no)
-		(fields_autoplaced yes)
-		(uuid "8a305d59-fc6d-4fc7-add1-e9bc748c0e51")
-		(property "Reference" "#FLG02"
-			(at 180.34 146.685 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Value" "PWR_FLAG"
-			(at 180.34 148.725 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-			)
-		)
-		(property "Footprint" ""
-			(at 180.34 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Datasheet" "~"
-			(at 180.34 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(property "Description" ""
-			(at 180.34 144.78 0)
-			(effects
-				(font
-					(size 1.27 1.27)
-				)
-				(hide yes)
-			)
-		)
-		(pin "1"
-			(uuid "95d00b75-6966-4e6c-beb2-7b6a4c2d61a6")
-		)
-		(instances
-			(project "FABI_schematic"
-				(path "/8404dabe-a0ce-44ce-a3c9-f9e9e54d2b02"
-					(reference "#FLG02")
-					(unit 1)
-				)
-			)
-		)
-	)
-	(symbol
 		(lib_id "power:GND")
 		(at 106.68 182.88 0)
 		(mirror y)
@@ -14137,6 +13840,15 @@
 				(hide yes)
 			)
 		)
+		(property "Mouser" "667-ERJ-3EKF1000V"
+			(at 237.49 38.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "cdb02e0c-2e6d-4962-a66f-43172f6b8bac")
 		)
@@ -14229,6 +13941,15 @@
 			(effects
 				(font
 					(size 0.9906 0.9906)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser" "667-ERJ-3EKF1000V"
+			(at 237.49 33.02 0)
+			(effects
+				(font
+					(size 1.27 1.27)
 				)
 				(hide yes)
 			)
@@ -14683,6 +14404,15 @@
 				(hide yes)
 			)
 		)
+		(property "Mouser Part Number" "71-RCA060310K0FKEA"
+			(at 223.52 26.67 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
 		(pin "1"
 			(uuid "a2785900-a255-43fe-82f4-86a72ca6a100")
 		)
@@ -14878,7 +14608,7 @@
 	)
 	(symbol
 		(lib_id "power:GND")
-		(at 200.66 152.4 0)
+		(at 200.66 147.32 0)
 		(unit 1)
 		(exclude_from_sim no)
 		(in_bom yes)
@@ -14886,7 +14616,7 @@
 		(dnp no)
 		(uuid "aa560a7e-1dbd-4f79-b4de-9b3d8386ed3f")
 		(property "Reference" "#PWR013"
-			(at 200.66 158.75 0)
+			(at 200.66 153.67 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14895,7 +14625,7 @@
 			)
 		)
 		(property "Value" "GND"
-			(at 200.787 156.7942 0)
+			(at 200.787 151.7142 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14903,7 +14633,7 @@
 			)
 		)
 		(property "Footprint" ""
-			(at 200.66 152.4 0)
+			(at 200.66 147.32 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14912,7 +14642,7 @@
 			)
 		)
 		(property "Datasheet" ""
-			(at 200.66 152.4 0)
+			(at 200.66 147.32 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -14921,7 +14651,7 @@
 			)
 		)
 		(property "Description" ""
-			(at 200.66 152.4 0)
+			(at 200.66 147.32 0)
 			(effects
 				(font
 					(size 1.27 1.27)
@@ -15101,6 +14831,15 @@
 			)
 		)
 		(property "Mouser" "71-RCA060310K0FKEA"
+			(at 223.52 34.29 0)
+			(effects
+				(font
+					(size 1.27 1.27)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser Part Number" "71-RCA060310K0FKEA"
 			(at 223.52 34.29 0)
 			(effects
 				(font
@@ -18140,6 +17879,15 @@
 			(effects
 				(font
 					(size 0.9906 0.9906)
+				)
+				(hide yes)
+			)
+		)
+		(property "Mouser Part Number" "621-D5V0F4U6SO-7"
+			(at 91.44 38.1 0)
+			(effects
+				(font
+					(size 1.27 1.27)
 				)
 				(hide yes)
 			)
