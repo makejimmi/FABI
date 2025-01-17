@@ -130,4 +130,12 @@ void displayUpdate(void) {
     case 2: oled->print("BT"); break;
     case 3: oled->print("both"); break;
   }
+
+  // Display the battery percentage on the display
+  // The battery percentage shall be read in a regular interval
+  char* buffer = (char*)calloc(4, sizeof(char));
+  sprintf(buffer, "%d%%", sensorData.currentBattPercent);
+  oled->setCursor(96, 1);
+  oled->print(buffer);
+  free(buffer);
 }

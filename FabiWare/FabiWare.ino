@@ -48,6 +48,8 @@
 #include "keys.h"
 #include <hardware/watchdog.h>
 
+#include "lpwFuncs.h" // LPW
+
 #ifdef FLIPMOUSE
   char moduleName[]="FLipmouse";   //   device name for ID string & BT-pairing
   uint8_t addonUpgrade = BTMODULE_UPGRADE_IDLE; // if not "idle": we are upgrading the addon module
@@ -85,7 +87,12 @@ struct SensorData sensorData {
   .dir=0,
   .autoMoveX=0, .autoMoveY=0,
   .xDriftComp=0, .yDriftComp=0,
-  .xLocalMax=0, .yLocalMax=0
+  .xLocalMax=0, .yLocalMax=0,
+  .powerMsg = 'X',.prevPowerMsg = 'N',
+  .battPercentSum = 0, 
+  .currentBattPercent = 0, 
+  .battStatusSum = 0, .battStateCounter = 0,
+  .batteryRefresh = false
 };
 
 struct I2CSensorValues sensorValues {        
@@ -105,6 +112,8 @@ unsigned long lastInteractionUpdate;          // timestamp for HID interaction u
    @return none
 */
 void setup() {
+
+  //initPowerSave(); // LPW
 
   // prepare synchronizsation of sensor data exchange between cores
   mutex_init(&(sensorValues.sensorDataMutex));
@@ -215,6 +224,9 @@ void loop() {
     updateBTConnectionState(); // check if BT is connected (for pairing indication LED animation)
     updateTones();    // mode indication via audio signals (buzzer)
   }
+
+  //checkBMSStat();
+  
   delay(1);  // core0: sleep a bit ...  
 }
 
@@ -284,6 +296,6 @@ void loop1() {
     watchdog_reboot(0, 0, 10);
     while(1);
   }
-  
+
   delay(1);  // core1: sleep a bit ...  
 }

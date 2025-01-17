@@ -135,6 +135,11 @@ struct SensorData {
   int8_t autoMoveX,autoMoveY;
   int xDriftComp, yDriftComp;
   int xLocalMax, yLocalMax;  
+  char powerMsg, prevPowerMsg;
+  uint16_t battPercentSum;
+  uint16_t currentBattPercent;
+  uint8_t battStatusSum, battStateCounter;
+  bool batteryRefresh;
 };
 
 
