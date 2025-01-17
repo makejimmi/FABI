@@ -51,5 +51,4 @@ void displayUpdate(void);
    @return none
 */
 void displayMessage(char * msg);
-
 #endif

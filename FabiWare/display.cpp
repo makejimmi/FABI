@@ -35,16 +35,20 @@ SSD1306AsciiWire *oled;    // pointer to the display driver class
 */
 uint8_t displayInit (uint8_t useWire1) {
   if (useWire1) {
+  #ifdef FABI
     Wire1.setSDA(PIN_WIRE1_SDA_);
     Wire1.setSCL(PIN_WIRE1_SCL_);
     Wire1.begin();
+  #endif
     Wire1.beginTransmission(SCREEN_ADDRESS);  
     if (Wire1.endTransmission()) return (false);
     oled = new SSD1306AsciiWire(Wire1);
   } else {
+  #ifdef FABI
     Wire.setSDA(PIN_WIRE0_SDA_);
     Wire.setSCL(PIN_WIRE0_SCL_);
     Wire.begin();
+  #endif
     Wire.beginTransmission(SCREEN_ADDRESS);  
     if (Wire.endTransmission()) return (false);
     oled = new SSD1306AsciiWire(Wire);
@@ -70,6 +74,10 @@ uint8_t displayInit (uint8_t useWire1) {
 */
 void displayClear(void) {
   oled->clear();
+  if (slotSettings.ro>90)
+    oled->displayRemap(true);
+  else oled->displayRemap(false);
+  oled->setInvertMode(false);
 }
 
 
@@ -104,10 +112,30 @@ void displayUpdate(void) {
 
   oled->set1X();
 
+  // display modes for FLipPad
+  #ifndef FABI
+  oled->setCursor(100,0);
+  switch (slotSettings.stickMode) {
+    case 0:
+    case 1: oled->print("Stk"); break;
+    case 2:
+    case 3:
+    case 4: oled->print("Joy"); break;
+  }
+  #endif  
+
   oled->setCursor(100,3);
   switch (slotSettings.bt) {
     case 1: oled->print("USB"); break;
     case 2: oled->print("BT"); break;
     case 3: oled->print("both"); break;
   }
+
+  // Display the battery percentage on the display
+  // The battery percentage shall be read in a regular interval
+  char* buffer = (char*)calloc(4, sizeof(char));
+  sprintf(buffer, "%d%%", sensorData.currentBattPercent);
+  oled->setCursor(96, 1);
+  oled->print(buffer);
+  free(buffer);
 }

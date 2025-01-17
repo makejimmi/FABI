@@ -17,6 +17,7 @@
 #include "FlipWare.h"        //  FABI command definitions
 #include "infrared.h"
 #include "keys.h"
+#include "lpwFuncs.h" // LPW
 
 struct slotButtonSettings buttons [NUMBER_OF_BUTTONS];   // array for all buttons - type definition see FlipWare.h
 char * buttonKeystrings[NUMBER_OF_BUTTONS];              // pointers to keystring parameters
@@ -109,11 +110,23 @@ void initButtons() {
     buttons[i].mode = CMD_NC;  // no command
   }
   
-  buttons[0].mode = CMD_KP; setButtonKeystring(0, "KEY_SPACE ");
-  buttons[1].mode = CMD_KP; setButtonKeystring(1, "KEY_ENTER ");
-  buttons[2].mode = CMD_CL;
-  buttons[3].mode = CMD_KP; setButtonKeystring(3, "KEY_LEFT "); 
-  buttons[4].mode = CMD_KP; setButtonKeystring(4, "KEY_RIGHT ");
+  #ifdef FLIPMOUSE
+    buttons[0].mode = CMD_KP; setButtonKeystring(0, "KEY_SPACE ");
+    buttons[1].mode = CMD_KP; setButtonKeystring(1, "KEY_ENTER ");
+    buttons[2].mode = CMD_CL;
+    buttons[3].mode = CMD_KP; setButtonKeystring(3, "KEY_LEFT "); 
+    buttons[4].mode = CMD_KP; setButtonKeystring(4, "KEY_RIGHT ");
+  #endif
+  #ifdef FLIPMOUSE
+    buttons[0].mode = CMD_NE; // button1: switch to next slot
+    buttons[3].mode = CMD_KP; setButtonKeystring(3, "KEY_UP ");
+    buttons[4].mode = CMD_KP; setButtonKeystring(4, "KEY_DOWN ");
+    buttons[5].mode = CMD_KP; setButtonKeystring(5, "KEY_LEFT "); 
+    buttons[6].mode = CMD_KP; setButtonKeystring(6, "KEY_RIGHT ");
+    buttons[7].mode = CMD_HL; // sip: hold left mouse button
+    buttons[9].mode = CMD_CR; // puff: click right
+    buttons[10].mode = CMD_CA; // strong puff: calibrate
+  #endif
 }
 
 
@@ -140,6 +153,8 @@ void handleRelease (int buttonIndex)    // a button was released: deal with "sti
       mouseRelease(MOUSE_MIDDLE);
       break;
     case CMD_JP: joystickButton(buttons[buttonIndex].value, 0); break;
+    case CMD_MX: sensorData.autoMoveX = 0; break;
+    case CMD_MY: sensorData.autoMoveY = 0; break;
     case CMD_KH: releaseKeys(buttonKeystrings[buttonIndex]); break;
     case CMD_IH:
       stop_IR_command();
@@ -163,6 +178,7 @@ uint8_t handleButton(int i, uint8_t state)    // button debouncing and press det
             buttonStates |= (1<<i); //save for reporting
             handlePress(i);
             buttonDebouncers[i].timestamp = millis(); // start measuring time
+            userInterrupt(); // LPW
           }
           else {   // new stable state: released !
             // if (!inHoldMode(i))
