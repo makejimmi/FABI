@@ -31,7 +31,7 @@
 #endif
 
 #if !PICO_RP2040
-#include "powman.h"
+#include <hardware/powman.h>
 #endif
 
 // The difference between sleep and dormant is that ALL clocks are stopped in dormant mode,

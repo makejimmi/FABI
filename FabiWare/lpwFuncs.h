@@ -19,9 +19,10 @@
 
 #include "hardware/xosc.h"
 #include "hardware/uart.h"
-#include "sleep.h"
+#include "powermanagement/sleep.h"
 #include "FlipWare.h"
 #include "display.h"
+#include "sleep.h"
 #include <pico/types.h>
 
 /**
@@ -32,7 +33,9 @@
 #define V_BATT_MEASURE 28
 #define CHARGE_STAT 1
 #define EN3V3 7
-#define dormantInterruptPin 3   ///< GPIO11, interrupt for dormant state
+#define dormantInterruptPin 4   ///< GPIO11, interrupt for dormant state
+
+#define battRefreshRate 1000 // in ms; ONLY IN MULTIPLES OF TEN
 
 // THERE ARE CHANGED PINS THAT NEED TO BE REDEFINED, see FABI schematic
 
