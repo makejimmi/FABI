@@ -133,9 +133,18 @@ void displayUpdate(void) {
 
   // Display the battery percentage on the display
   // The battery percentage shall be read in a regular interval
-  char* buffer = (char*)calloc(4, sizeof(char));
-  sprintf(buffer, "%d%%", sensorData.currentBattPercent);
   oled->setCursor(96, 1);
-  oled->print(buffer);
-  free(buffer);
+  int8_t battValue = sensorData.currentBattPercent;
+  switch(battValue){
+    case -1: // USB power - no battery
+      oled->print("none"); break;
+    case 127:
+      oled->print("ch"); break;
+    case 101:
+      oled->print("full"); break;
+    default:
+      char* buffer = (char*)calloc(6, sizeof(char));
+      sprintf(buffer, "%d%%", battValue);
+      oled->print(buffer); free(buffer); break;
+  }
 }

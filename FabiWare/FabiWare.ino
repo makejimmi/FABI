@@ -58,7 +58,6 @@
   char moduleName[]="FABI";
 #endif
 
-
 /**
    default values for empty configuration slot 
 */
@@ -88,11 +87,7 @@ struct SensorData sensorData {
   .autoMoveX=0, .autoMoveY=0,
   .xDriftComp=0, .yDriftComp=0,
   .xLocalMax=0, .yLocalMax=0,
-  .powerMsg = 'X',.prevPowerMsg = 'N',
-  .battPercentSum = 0, 
-  .currentBattPercent = 0, 
-  .battStatusSum = 0, .battStateCounter = 0,
-  .batteryRefresh = false
+  .currentBattPercent = -1, 
 };
 
 struct I2CSensorValues sensorValues {        
@@ -113,7 +108,7 @@ unsigned long lastInteractionUpdate;          // timestamp for HID interaction u
 */
 void setup() {
 
-  //initPowerSave(); // LPW
+  initPowerSave(); // LPW
 
   // prepare synchronizsation of sensor data exchange between cores
   mutex_init(&(sensorValues.sensorDataMutex));
@@ -220,12 +215,12 @@ void loop() {
     handleUserInteraction();                    // handle all mouse / joystick / button activities
 
     reportValues();   // send live data to serial
-    updateLeds();     // mode indication via front facing neopixel LEDs
+    //updateLeds();     // mode indication via front facing neopixel LEDs
     updateBTConnectionState(); // check if BT is connected (for pairing indication LED animation)
     updateTones();    // mode indication via audio signals (buzzer)
   }
 
-  //checkBMSStat();
+  checkBMSStat();
   
   delay(1);  // core0: sleep a bit ...  
 }

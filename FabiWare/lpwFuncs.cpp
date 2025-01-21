@@ -11,25 +11,49 @@
  * by USB. Patches underway...
 */
 void checkBMSStat() {
-  if(sensorData.battStateCounter >= 100) {
-    uint16_t check = sensorData.battPercentSum/sensorData.battStatusSum;
-    if( sensorData.currentBattPercent != check ){
-      sensorData.currentBattPercent = sensorData.battPercentSum/sensorData.battStatusSum;
-    } 
-    displayUpdate();
-    sensorData.battPercentSum = 0;
-    sensorData.battStateCounter = 0;
-    sensorData.battStatusSum = 0;
+  
+  static uint16_t battStateCounter, battStatusSum, amountOfReads, battPercentSum;
+  static int8_t prevBattValue = -2;
+  
+  if(battStateCounter >= battRefreshRate) {
+    
+    int8_t battValue;
+    
+    if(battStatusSum != battStateCounter){
+      switch(battStatusSum){
+        case (uint16_t) (battRefreshRate*0.8):        // CHARGING
+          battValue = 127; break;
+        default:                                      // USB - no battery
+          battValue = -1; break; 
+      }
+    } else {
+      battValue = battPercentSum/amountOfReads; //slotSettings.bt = 2; // BT
+    }
+    
+    if(battValue != prevBattValue){ // statement to prevent display from refreshing too often
+      sensorData.currentBattPercent = battValue;
+      displayUpdate();
+      prevBattValue = battValue;
+    }
+    
+    amountOfReads = 0; battStateCounter = 0;
+    battPercentSum = 0; battStatusSum = 0;
   }
-  switch(sensorData.battStateCounter++%2){
+  
+  switch(battStateCounter++%10){
    case 0: gpio_disable_pulls(CHARGE_STAT); gpio_pull_up(CHARGE_STAT); 
+    battStatusSum++; break;
+   case 4:
     if(gpio_get(CHARGE_STAT)){
-      sensorData.battStatusSum++; sensorData.battPercentSum += readPercentage();
+      battStatusSum++; battPercentSum += readPercentage(); amountOfReads++;
     } break;
-   case 1: gpio_disable_pulls(CHARGE_STAT); gpio_pull_down(CHARGE_STAT); 
+   case 5: gpio_disable_pulls(CHARGE_STAT); gpio_pull_down(CHARGE_STAT); 
+    battStatusSum++; break;
+   case 9:
     if(gpio_get(CHARGE_STAT)){
-      sensorData.battStatusSum++; sensorData.battPercentSum += readPercentage();
+      battStatusSum++; battPercentSum += readPercentage(); amountOfReads++;
     } break;
+   default: battStatusSum++; break;
   }
 }
 
@@ -60,10 +84,8 @@ void disable3V3() {
  */
 uint16_t readPercentage() {
     // The voltage divider reduces battery voltage by 50% for ADC measurement.
-    // A fully charged battery (4.2V) corresponds to ~651 ADC value (63.63% of 1024).
-    // Mapping ADC value (518(==3.2V)-640) to battery percentage (0-100%).
-    return map(analogRead(V_BATT_MEASURE), 518, 672, 0, 100);
-    //return analogRead(V_BATT_MEASURE);
+    // 518 = 3.2V (0%)  |  682 = 4.2V (100%)
+    return map(analogRead(V_BATT_MEASURE), 518, 682, 0, 100);
 }
 
 /**
@@ -73,10 +95,6 @@ uint16_t readPercentage() {
  */
 void initPowerSave() {
     gpio_init(CHARGE_STAT);
-    gpio_init(V_BATT_VD_SWITCH);
-    gpio_set_dir(V_BATT_VD_SWITCH, false);
-    gpio_init(V_BATT_VD_SWITCH);
-    gpio_set_dir(V_BATT_VD_SWITCH, false);
     //enableBattMeasure();
     enable3V3();
     //inactivityDetector();
@@ -87,7 +105,10 @@ void initPowerSave() {
  * @brief Placeholder for deinitializing power-saving mechanisms.
  * @return none
  */
-void deinitPowerSave() {}
+void deinitPowerSave() {
+    disable3V3();
+    disableBattMeasure();
+}
 
 /**
  * @name disableBattMeasure
@@ -95,10 +116,8 @@ void deinitPowerSave() {}
  * @return none
  */
 void disableBattMeasure() {
-    pinMode(V_BATT_VD_SWITCH, OUTPUT);
-    digitalWrite(V_BATT_VD_SWITCH, LOW);
-    pinMode(V_BATT_MEASURE, OUTPUT);
-    digitalWrite(V_BATT_MEASURE, LOW);
+    gpio_set_dir(V_BATT_VD_SWITCH, true);
+    gpio_set_dir(V_BATT_VD_SWITCH, true);
 }
 
 /**
@@ -107,8 +126,11 @@ void disableBattMeasure() {
  * @return none
  */
 void enableBattMeasure() {
-    pinMode(V_BATT_VD_SWITCH, INPUT);
-    pinMode(V_BATT_MEASURE, INPUT);
+    gpio_init(CHARGE_STAT);
+    gpio_init(V_BATT_VD_SWITCH);
+    gpio_set_dir(V_BATT_VD_SWITCH, false);
+    gpio_init(V_BATT_VD_SWITCH);
+    gpio_set_dir(V_BATT_VD_SWITCH, false);
 }
 
 /**
@@ -148,6 +170,7 @@ void dormantUntilInterrupt(int interruptPin) {
     // sleep_run_from_xosc(); // Runs the crystal oscillator (RP2040 & RP2350)
     sleep_goto_dormant_until_edge_high(interruptPin);
     sleep_power_up();
+    delay(500);
 }
 
 /**
@@ -156,10 +179,10 @@ void dormantUntilInterrupt(int interruptPin) {
  * @return none
  */
 void inactivityHandler() {
-    disableBattMeasure();
-    disable3V3();
+    displayClear();
+    deinitPowerSave();
+    sensorData.currentBattPercent = 0;
     dormantUntilInterrupt(dormantInterruptPin);
-    delay(1000);
     setup();
 }
 
