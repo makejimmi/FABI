@@ -62,7 +62,7 @@
 
 
 /**
-   extern declaration of static variables
+   extern declaration of static variables0
    which shall be accessed from other modules
 */
 extern int8_t  input_map[NUMBER_OF_PHYSICAL_BUTTONS];  // maps the button number to physical pin
@@ -97,5 +97,7 @@ void updateLeds();
    @note Only used in CIM mode.
 */
 void setLeds(uint8_t leds);
+
+void clearLeds();
 
 #endif

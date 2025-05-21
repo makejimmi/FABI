@@ -74,7 +74,7 @@
 #define DEBUG_ACTIVITY_LED 	   // enable blinking internal led signaling activity (in sensor loop, core1).
 //#define DEBUG_PRESSURE_RAWVALUES // raw output of pressure values and filtered output
 //#define DEBUG_MPRLS_ERRORFLAGS // continously print error flags of MPRLS
-//#define DEBUG_BATTERY_MANAGEMENT 	 // enable a debug output for battery state detection and management.
+#define DEBUG_BATTERY_MANAGEMENT 	 // enable a debug output for battery state detection and management.
 
 
 /**

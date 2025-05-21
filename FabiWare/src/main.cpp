@@ -322,5 +322,7 @@ void loop1() {
     if (!(cnt++%200)) digitalWrite(LED_BUILTIN,!digitalRead(LED_BUILTIN));
   #endif
 
+  core1dormantManager(false);
+
   delay(1);  // core1: sleep a bit ...  
 }

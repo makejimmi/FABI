@@ -15,12 +15,19 @@
 #include "display.h"
 #include "pico/cyw43_arch.h"
 
+#include "hardware/pwm.h"
+#include "hardware/vreg.h"
+
+#include "tone.h"
+#include "keys.h"
+#include "sensors.h"
+
 extern "C" {
   #include "../lib/power/sleep.h"
 }
 
 unsigned long inactivityTime=0;  // measures user inactivity (in ms)
-struct PinConfig pinBackup[29];  // array to save pin configurations
+static bool core1dormantSwitch = false;
 
 /**
  * @name detectUSB
@@ -134,7 +141,7 @@ void performBatteryManagement()  {
   detectUSB();
   batteryPresenceDetector();
   sensorData.currentBattPercent = getBatteryPercentage();
-  batteryDisplay();
+  if (!isDisplayAvailable()) batteryDisplay();
   #ifdef DEBUG_BATTERY_MANAGEMENT
     Serial.println("Battery level="+String(sensorData.currentBattPercent));
   #endif
@@ -209,54 +216,201 @@ void enableBattMeasure() {
 }
 
 /**
+ * @name core1dormantManager
+ * @brief Manages core1 when preparing for / getting out of dormant mode.
+ * @todo eliminate the need for a global variable, perhaps by adding it (global var) into slotSettings struct...
+ */
+void core1dormantManager(bool core0signal) {
+  
+  if (core1dormantSwitch && !core0signal) {
+      // deinit stuff
+      Wire1.flush(); 
+      Wire1.endTransmission();        // I2C Sensors (NAUT, DPS)
+      Wire1.end(); 
+
+      core1dormantSwitch = false; // preparation done
+
+      while(!core1dormantSwitch); // wait for signal from core0
+      
+      // enable Wire1 I2C interface (used by Core1 for sensors)
+      #ifndef FLIPMOUSE
+        Wire1.setSDA(PIN_WIRE1_SDA_);
+        Wire1.setSCL(PIN_WIRE1_SCL_);
+      #endif
+      Wire1.begin();
+      Wire1.setClock(400000);  // use 400kHz I2C clock
+
+      #ifdef DEBUG_ACTIVITY_LED
+        pinMode(LED_BUILTIN,OUTPUT);
+      #endif
+
+      initSensors();
+      if (getForceSensorType()==FORCE_NAU7802)
+        setSensorBoard(slotSettings.sb); // apply sensorboard settings
+      core1dormantSwitch = false;
+  }
+
+  if (core0signal) {
+      core1dormantSwitch = true;
+      displayMessage((char*) "1");
+      while(core1dormantSwitch);
+  }
+}
+
+/**
  * @name dormantUntilInterrupt
  * @brief Puts the device into dormant mode until a specified GPIO interrupt wakes it up.
  * @param interruptPin GPIO pin to monitor for the interrupt.
  */
-void dormantUntilInterrupt(int interruptPin) {
-  delay(1); // small delay to ensure system stability, might be redundant
+void dormantUntilInterrupt(int8_t *wake_interrupt_gpios, int8_t amt_gpios) {
   sleep_run_from_lposc(); // use low-power oscillator for minimal power consumption
-  sleep_goto_dormant_until_edge_high(interruptPin); // wait for rising edge interrupt
+
+  hw_set_bits(&powman_hw->vreg_ctrl, POWMAN_PASSWORD_BITS | POWMAN_VREG_CTRL_UNLOCK_BITS);
+  // Wait for any prior change to finish before making a new change
+  while (powman_hw->vreg & POWMAN_VREG_UPDATE_IN_PROGRESS_BITS)
+      tight_loop_contents();
+  hw_set_bits(&powman_hw->bod, ~(0x00000001)); // disable brownout detection
+
+  // Enter deep sleep --------------------------------------------------------
+  sleep_goto_dormant_until_edge_high(wake_interrupt_gpios, amt_gpios);  // Wait for rising edge
+
+  // Post-wake restoration ---------------------------------------------------
+  hw_set_bits(&powman_hw->vreg_ctrl, POWMAN_PASSWORD_BITS | POWMAN_VREG_CTRL_UNLOCK_BITS);
+  // Wait for any prior change to finish before making a new change
+  while (powman_hw->vreg & POWMAN_VREG_UPDATE_IN_PROGRESS_BITS)
+      tight_loop_contents();
+  hw_set_bits(&powman_hw->bod, 0x00000001); // enable brownout detection
+
   sleep_power_up(); // restore sys clocks after waking up (using rosc -> jump starts processor)
   delay(400); // allow some time for system to stabilize after restoring sys clocks
 }
 
 /**
- * @name inactivityHandler
- * @brief Handles inactivity by transitioning the system to dormant mode.
+ * @name deinitDormant
+ * @brief Restores full system operation after dormant mode.
+ * @details Reinits: CYW43, Peripherals, Comm. protocols, Core1 sensor processing.
+ * @todo implement core1dormantManager, load saved slot setting
  */
-void inactivityHandler() {
-  inactivityTime=0;
-  deinitBattery();
-  #ifndef FLIPMOUSE
-    MouseBLE.end();     // turn off Bluetooth
+void deinitDormant() {
+  cyw43_arch_init();      // WiFi / BT chip CYW43
+  app_alarm_pool = alarm_pool_create(2, 64);
+  enable3V3();            // power raail
+  delay(50);
+  Serial.begin(115200);
+  #ifdef DEBUG_DELAY_STARTUP
+    delay(3000);
   #endif
-  #ifdef DEBUG_BATTERY_MANAGEMENT
-    Serial.println("goodbye, going to sleep!");
-  #endif 
-  Serial.flush();
-  Serial.end();
-  displayMessage((char*)"ByeBye");
-  delay(2000);   // time for the user to read the message
-  disable3V3();  // shut down peripherals
-  digitalWrite(LED_BUILTIN,LOW);  // make sure the internal LED is off
 
-  dormantUntilInterrupt(input_map[0]); // enter sleepMode, use Button1 to wakeup!
-  //  <--   now sleeping!  
+  initBattery();
   
-  watchdog_reboot(0, 0, 10);  // cause a watchdog reset to wake everything up!
-  while (1) { continue; }     
+  #ifdef FLIPMOUSE
+    // TODO: FlipMouse specific initializations?
+  #else
+    Wire.setSDA(PIN_WIRE0_SDA_); 
+    Wire.setSCL(PIN_WIRE0_SCL_);
+  #endif
+  Wire.begin();
 
-  /*
-    // Note: this soft startup did not work ... TBD!
-    Serial.begin(115200);
-    delay(3000);  // allow some time for serial interface to come up
-    enable3V3();
-    initBattery();
-    displayReinit();
-    initButtons();
-    initDebouncers();
-  */
+  initGPIO();
+  initIR();
+  initButtons();
+  initDebouncers();
+  initStorage();
+  initAudio();
+
+  readFromEEPROMSlotNumber(0, false);     // load default slot settings
+  
+  #ifndef FLIPMOUSE
+    MouseBLE.begin(moduleName);
+    KeyboardBLE.begin("");
+    #ifdef FABIJOYSTICK_ENABLED
+      JoystickBLE.begin("");
+    #endif
+  #endif
+  setKeyboardLayout(slotSettings.kbdLayout);
+
+  initDisplay(); delay(10);
+  if (isDisplayAvailable()) displayUpdate();
+
+  core1dormantManager(true);
+
+  userActivity();
+  makeTone(TONE_STARTUP,0);  // announce readyness!
+}
+
+/**
+ * @name initDormant
+ * @brief Prepares system for dormant mode.
+ * @todo Have core1 take over init / deinit of Wire1 using core1dormantManager()
+ * @note GPIO map for high power consuming components
+ *        SWCP  : NEOPIXEL (10);                                                          | 10
+ *        PWM   : BUZZER (2), Audio_Signal (6), IR_LED (14)                               | 2, 6, 14
+ *        ADC   : EXT1 (26) : EXT2 (27), V_BATT_MEASURE (28)                              | 26, 27, 28
+ *        SIO   :                                                                         | 0, 1, 3, 4, 7, 8, 9, 11, 15, 16 
+ *        I2C   : MPRLS Sensors (GPIO5), SDA_INT (12) : SCL_INT (13), SDA (18) : SCL (19) | 5, 12, 13, 18, 19
+ */
+void initDormant() {
+  #ifdef DEBUG_BATTERY_MANAGEMENT
+    Serial.println("Preparing for dormant mode...");
+  #endif
+
+  // Misc
+  globalSettings.buzzerMode = 0;  // disable, 1 = only height, 2 = height and count, ...
+  globalSettings.audioVolume = 0; // deactivate audio output
+
+  #ifdef AUDIO_SIGNAL_PIN
+    pwm_set_enabled(pwm_gpio_to_slice_num(AUDIO_SIGNAL_PIN), false);
+  #endif
+  #ifdef TONE_PIN
+    pwm_set_enabled(pwm_gpio_to_slice_num(TONE_PIN), false);
+  #endif
+
+  // stop running processes ----------------------------
+  pauseDisplayUpdates(1);            // pause display updates
+  alarm_pool_destroy(app_alarm_pool);
+
+  #ifdef IR_LED_PIN
+    stop_IR_command();  // stop any running ir command
+  #endif
+
+  // power down peripherals ----------------------------
+  MouseBLE.end();       // does nothing when not running
+  KeyboardBLE.end();
+  delay(100);
+
+  cyw43_arch_deinit();  // deinit the cyw43 module
+  clearLeds();          // clear Neopixel
+
+  // core1dormantManager(true);     // <- todo
+  
+  if(isDisplayAvailable()) {        // clear and disconnect OLED Display
+    displayMessage((char*)"ByeBye");
+    pauseDisplayUpdates(1);         // pause display updates
+    delay(2000);                    // time for the user to read the message
+    displayClear();                 // clear the display <- go in front of stopping I2C bus
+  }
+
+  // I2C handling, Wire0 (12, 13 - INT) and Wire1 (18, 19 - "")
+  Wire1.flush();                  // move Wire1 init / deinit to core1dormantManager!!
+  Wire1.endTransmission();        // I2C Sensors (NAUT, DPS)
+  Wire1.end(); 
+
+  Wire.flush(); delay(10);
+  Wire.endTransmission(); delay(50);        // I2C Display
+  Wire.end(); delay(100);
+
+  // All other pins
+  disablePins(); delay(50);
+  Serial.end(); delay(500);
+}
+
+
+void inactivityHandler() {
+  initDormant();
+  dormantUntilInterrupt(input_map, NUMBER_OF_PHYSICAL_BUTTONS);
+  watchdog_reboot(0, 0, 10);  // cause a watchdog reset to wake everything up!
+  // deinitDormant();         // <- todo, in the meantime use watchdog reset
+  while (1) { continue; } 
 }
 
 /**
@@ -267,169 +421,16 @@ void userActivity() { // Call of this function can be found in line 181, buttons
   inactivityTime=0;   // reset the inactivity counter!
 }
 
-
 /**
- * @name savePeripherals
- * @brief Saves the current GPIO configuration for all pins.
+ * @name disablePins
+ * @brief Disable all pins.
  */
-void savePeripherals() {
-  for (uint pin = 0; pin < 29; pin++) {
-    if (pin == 23 || pin == 24 || pin == 25) continue; // skip specific pins
-    bool pullUp, pullDown;
-    pinBackup[pin].func = gpio_get_function(pin);
-    pinBackup[pin].isOutput = (gpio_get_dir(pin) == GPIO_OUT);
-    readPullState(pin, pullUp, pullDown);
-    pinBackup[pin].pullUp = pullUp;
-    pinBackup[pin].pullDown = pullDown;
-  }
-  Serial.println("Saved SIO pin configs.");
-}
-
-/**
- * @name disablePeripherals
- * @brief Disables all GPIO peripherals by deinitializing the pins.
- */
-void disablePeripherals() {
-  for (uint pin = 0; pin < 29; pin++) {
-    if (pin == 23 || pin == 24 || pin == 25) continue; // skip specific pins
-    if (pinBackup[pin].func == GPIO_FUNC_SIO) {
-      gpio_disable_pulls(pin);
-      gpio_deinit(pin);
-    }
-  }
-}
-
-/**
- * @name printPeripherals
- * @brief Prints the current GPIO configuration to the Serial monitor.
- */
-void printPeripherals() {
-  for (int pin = 0; pin < 29; pin++) {
+void disablePins() {
+  for (int pin = 0; pin < 28; pin++) {
     if (pin == 23 || pin == 24 || pin == 25) continue;
-    Serial.print(pin);
-    switch (pinBackup[pin].func) {
-      case GPIO_FUNC_HSTX: Serial.print(": HSTX"); break;
-      case GPIO_FUNC_SPI: Serial.print(": SPI"); break;
-      case GPIO_FUNC_UART: Serial.print(": UART"); break;
-      case GPIO_FUNC_I2C: Serial.print(": I2C"); break;
-      case GPIO_FUNC_PWM: Serial.print(": PWM"); break;
-      case GPIO_FUNC_SIO: Serial.print(": SIO"); break;
-      case GPIO_FUNC_PIO0: Serial.print(": PIO0"); break;
-      case GPIO_FUNC_PIO1: Serial.print(": PIO1"); break;
-      case GPIO_FUNC_PIO2: Serial.print(": PIO2"); break;
-      default: Serial.print(": NULL"); break;
-    }
-    Serial.print(", ");
-    Serial.print(pinBackup[pin].isOutput ? "OUT" : "IN");
-    if (pinBackup[pin].pullUp) Serial.print(", pullUp");
-    if (pinBackup[pin].pullDown) Serial.print(", pullDown");
-    Serial.println();
+    digitalWrite(pin, LOW);
+    pinMode(pin, INPUT);
+    digitalWrite(pin, LOW);
+    delay(5);
   }
 }
-
-/**
- * @name loadPeripherals
- * @brief Restores the saved GPIO configuration for all pins.
- */
-void loadPeripherals() {
-  for (uint pin = 0; pin < 29; pin++) {
-    if (pin == 23 || pin == 24 || pin == 25) continue;
-    if (pinBackup[pin].func == GPIO_FUNC_SIO) {
-      gpio_init(pin);
-      gpio_set_function(pin, pinBackup[pin].func);
-      gpio_set_dir(pin, pinBackup[pin].isOutput);
-      if (pinBackup[pin].pullUp) gpio_pull_up(pin);
-      if (pinBackup[pin].pullDown) gpio_pull_down(pin);
-    }
-  }
-}
-
-// #define DORMANT_SOURCE_LPOSC 1
-// void goSleep(uint gpio_pin, bool edge, bool high){
-//   uint src_hz = 32 * KHZ;
-//   uint clk_ref_src = CLOCKS_CLK_REF_CTRL_SRC_VALUE_LPOSC_CLKSRC;
-//   clock_configure(clk_ref, clk_ref_src, 0, src_hz, src_hz);
-//   clock_configure(clk_sys, CLOCKS_CLK_SYS_CTRL_SRC_VALUE_CLK_REF, 0, src_hz, src_hz);
-//   clock_configure(clk_peri, 0, CLOCKS_CLK_PERI_CTRL_AUXSRC_VALUE_CLK_SYS, src_hz, src_hz);
-
-//   clock_stop(clk_adc);
-//   clock_stop(clk_usb);
-//   clock_stop(clk_hstx);
-//   pll_deinit(pll_sys);
-//   pll_deinit(pll_usb);
-
-//   // // Assuming both xosc and rosc are running at the moment
-//   //   if (dormant_source == DORMANT_SOURCE_XOSC) {
-//   //       // Can disable rosc
-//   //       rosc_disable();
-//   //   } else {
-//   //       // Can disable xosc
-//   //       xosc_disable();
-//   //   }
-
-//   // the lines up above assume RP2040 that has no LPOSC so it always disables xosc when
-//   // there's a will to use LPOSC as dormant source:
-//   xosc_disable();
-
-//   bool low = !high;
-//   bool level = !edge;
-
-//   uint32_t event = 0
-
-//   if (level && low) event = IO_BANK0_DORMANT_WAKE_INTE0_GPIO0_LEVEL_LOW_BITS;
-//   if (level && high) event = IO_BANK0_DORMANT_WAKE_INTE0_GPIO0_LEVEL_HIGH_BITS;
-//   if (edge && high) event = IO_BANK0_DORMANT_WAKE_INTE0_GPIO0_EDGE_HIGH_BITS;
-//   if (edge && low) event = IO_BANK0_DORMANT_WAKE_INTE0_GPIO0_EDGE_LOW_BITS;
-
-//   gpio_init(gpio_pin);
-//   gpio_set_input_enabled(gpio_pin, true);
-//   gpio_set_input_hysteresis_enabled(gpio_pin, true);
-//   gpio_set_dormant_irq_enabled(gpio_pin, event, true);
-
-//   // here belongs going dormant()
-
-//   /** @note when using crystal oscillator as dormant source */
-//   // xosc_dormant();
-
-//   /** @note when using ring oscillator as dormant source */
-//   // hw_clear_bits(&rosc_hw->status, ROSC_STATUS_BADWRITE_BITS);
-
-//   // if !(rosc_hw->status & ROSC_STATUS_BADWRITE_BITS){
-//   //   rosc_hw->dormant = ROSC_DORMANT_VALUE_DORMANT;
-
-//   //   if !(rosc_hw->status & ROSC_STATUS_BADWRITE_BITS){
-//   //     // all good.
-//   //   } else {
-//   //     // something went wrong.
-//   //   }
-//   //   // wait for ring oscillator to become stable once woken up
-//   //   while(!(rosc_hw->status & ROSC_STATUS_STABLE_BITS));
-//   // } else {
-//   //   // something went wrong.
-//   // }
-
-//   // EXECUTION WILL STOP HERE.
-
-//   gpio_acknowledge_irq(gpio_pin, event);
-//   gpio_set_input_enabled(gpio_pin, false);
-
-  
-//   // To be called after waking up from sleep/dormant mode to restore system clocks properly
-//   // if !(rosc_hw->status & ROSC_STATUS_BADWRITE_BITS){
-//   //   rosc_hw->ctrl = ROSC_CTRL_ENABLE_BITS;
-
-//   //   if !(rosc_hw->status & ROSC_STATUS_BADWRITE_BITS){
-//   //     // all good.
-//   //   } else {
-//   //     // something went wrong.
-//   //   }
-//   //   // wait for ring oscillator to become stable once woken up
-//   //   while(!(rosc_hw->status & ROSC_STATUS_STABLE_BITS));
-//   // } else {
-//   //   // something went wrong.
-//   // }
-//   clocks_init();
-
-//   delay(1000);
-// }
-
