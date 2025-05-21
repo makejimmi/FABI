@@ -98,4 +98,11 @@ void updateLeds();
 */
 void setLeds(uint8_t leds);
 
+/**
+   @name clearLeds
+   @brief clears the LEDs
+   @return none
+*/
+void clearLeds();
+
 #endif

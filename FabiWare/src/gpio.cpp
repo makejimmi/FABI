@@ -103,3 +103,7 @@ void setLeds(uint8_t leds)
   pixels.setPixelColor(0,r,g,b);
   pixels.show();
 }
+
+void clearLeds() {
+  pixels.clear(); pixels.show();
+}

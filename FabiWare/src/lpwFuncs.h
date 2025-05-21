@@ -74,6 +74,7 @@ void disableBattMeasure();            // disables battery voltage measurement ci
 void inactivityHandler();                     // prepares sleep mode
 void dormantUntilInterrupt(int8_t *wake_interrupt_gpios, int8_t amt_gpios); // puts the device into dormant mode
 void userActivity();                          // handles user interaction: resets inactivity counter
+void initDormant();
 
 /**
  * @name Utility Functions
