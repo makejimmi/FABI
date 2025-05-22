@@ -215,7 +215,6 @@ void enableBattMeasure() {
  * @param interruptPin GPIO pin to monitor for the interrupt.
  */
 void dormantUntilInterrupt(int8_t *wake_interrupt_gpios, int8_t amt_gpios) {
-  delay(1); // small delay to ensure system stability, might be redundant
   sleep_run_from_lposc(); // use low-power oscillator for minimal power consumption
   sleep_goto_dormant_until_edge_high(wake_interrupt_gpios, amt_gpios); // wait for rising edge interrupt
   sleep_power_up(); // restore sys clocks after waking up (using rosc -> jump starts processor)
@@ -230,7 +229,8 @@ void inactivityHandler() {
   initDormant();
   dormantUntilInterrupt(input_map, NUMBER_OF_PHYSICAL_BUTTONS); // enter sleepMode, use input_map pins to wakeup!
   //  <--   now sleeping!  
-  
+  cyw43_arch_init();
+  goingDormant = false;
   watchdog_reboot(0, 0, 10);  // cause a watchdog reset to wake everything up!
   while (1) { continue; }
 }
@@ -244,7 +244,9 @@ void userActivity() { // Call of this function can be found in line 181, buttons
 }
 
 void initDormant() {
-  delay(1000);
+  goingDormant = true;
+  delay(2000);
+
   #ifdef AUDIO_SIGNAL_PIN
     pwm_set_enabled(pwm_gpio_to_slice_num(AUDIO_SIGNAL_PIN), false);
   #endif
@@ -262,8 +264,9 @@ void initDormant() {
   #endif
 
   cyw43_arch_deinit();
-  if (Serial.available()) Serial.end(); delay(500);
+
   clearLeds();
+
   displayMessage((char*) "ByeBye");
   pauseDisplayUpdates(1);
   delay(2000);
@@ -276,7 +279,8 @@ void initDormant() {
     Wire1.flush(); delay(10); Wire1.endTransmission(); delay(10); Wire1.end(); delay(100);
   }
 
-  disablePeripherals();
+  disablePeripherals(); delay(50);
+  Serial.end(); delay(500);
 }
 
 /**
@@ -306,6 +310,7 @@ void disablePeripherals() {
     digitalWrite(pin, LOW);
     pinMode(pin, INPUT);
     digitalWrite(pin, LOW);
+    delay(5);
   }
 }
 
